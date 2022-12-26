@@ -35,7 +35,7 @@ def CreateSubDf(df, an_id):
     df_labels = sub_df[['true_label', 'chosen_label']]
     return df_labels
 
-df_labels = CreateSubDf(df_cifar10h, 3)
+df_labels = CreateSubDf(df_cifar10h, 0)
 labels = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog",
             "horse","ship", "truck"]
 
@@ -94,3 +94,8 @@ y_true = df_labels[['true_label']].to_numpy()
 y_predict = df_labels[['chosen_label']].to_numpy()
 
 matrice_confusion(y_true, y_predict, labels)
+
+# compter le nombre de fois que le label chat est correctement prédit par l'annotateur
+# df_labels[(df_labels['true_label'] == 3) & (df_labels['chosen_label'] == 9)].value_counts()
+# compter le nombre de fois que l'annoteur se trompe en ne prédisant pas le label chat
+# df_labels[(df_labels['true_label'] == 3) & (df_labels['chosen_label'] != 3)].value_counts()
