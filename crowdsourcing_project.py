@@ -8,6 +8,7 @@ Created on Wed Dec 21 08:46:54 2022
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import itertools
 from sklearn.metrics import confusion_matrix
 
 df_cifar10h = pd.read_csv(
@@ -38,33 +39,58 @@ df_labels = CreateSubDf(df_cifar10h, 3)
 labels = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog",
             "horse","ship", "truck"]
 
-# Fonction affichant la matrice de confusion associée à un annotateur
-# elle prend en argument:
-# y_true tableau dans lequel sont stockés les vraies label
-# y_pred tableau dans lequel sont stockés les labels choisis par l'annotateur
-# Elle retourne un graphique représentant la matrice de confusion
+# Affichage customisé de la matrice de confusion
+# Cette fonction prend en argument:
+# cm (la matrice de confusion)
+# classes (la liste des noms de chaque classe)
+# normalize (pour normaliser la matrice ou non)
+# title (le titre de la représentation graphique de la matrice de confusion)
+# cmap (palette de couleurs pour le graphique)
+def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
 
-def PlotConfusionMatrix(df, labels):
-    cm = confusion_matrix(df[['true_label']], df[['chosen_label']],
-                                  normalize='true')
-    cmap=plt.cm.get_cmap('Blues')
-    y_labels = labels
-    ticks = np.arange(len(y_labels))
-    
-    plt.figure(figsize=(10, 10))
-    plt.imshow(cm, cmap=cmap)
-    plt.title('matrice de confusion')
+    print(cm)
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
     plt.colorbar()
-    plt.xticks(ticks, y_labels, rotation=45)
-    plt.yticks(ticks, y_labels)
-    plt.grid(False)
-        
-    plt.ylabel('True Label')
-    plt.xlabel('Chosen Label')
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.ylabel('True labels')
+    plt.xlabel('Chosen labels')
+    plt.tight_layout()
+    
+
+# Calcul de la matrice de contingence (ou matrice de confusion)
+# Cette fonction prend en argument:
+# y_true (un numpy array dans lequel sont stockés les vrais labels)
+# y_predict (un numpy array dans lequel sont stockés les labels choisis par
+# l'annotateur)
+# class_names (la liste des noms de chaque classe)
+# elle retourne le graphique customisé de la matrice de confusion
+def matrice_confusion(y_true, y_predict, class_names):
+    conf_matrix = confusion_matrix(y_true, y_predict)
+    np.set_printoptions(precision=2)
+    plt.figure(figsize=(15,15))
+    plot_confusion_matrix(conf_matrix, normalize=True, classes=class_names,
+                          title='Matrice de confusion')
     plt.show()
 
-PlotConfusionMatrix(df_labels, labels)
+y_true = df_labels[['true_label']].to_numpy()
+y_predict = df_labels[['chosen_label']].to_numpy()
 
-# confusions = {}
-# confusions[0] = confusion_matrix(df_labels['true_label'],
-#                                  df_labels['chosen_label'],normalize='true')
+matrice_confusion(y_true, y_predict, labels)
