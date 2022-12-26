@@ -7,10 +7,11 @@ Created on Wed Dec 21 08:46:54 2022
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.metrics import ConfusionMatrixDisplay
+import numpy as np
+from sklearn.metrics import confusion_matrix
 
 df_cifar10h = pd.read_csv(
-    'C:/Users/olivi/Documents/Montpellier/M2_SSD/Projet_Salmon/data/cifar10h-raw.csv', na_values='-99999')
+    'C:/Users/olivi/Documents/Montpellier/M2_SSD/Projet_Salmon_test/data/cifar10h-raw.csv', na_values='-99999')
 
 df_cifar10h.dropna(inplace=True)
 # df_category_label = df_cifar10h[["annotator_id","true_category","chosen_category",
@@ -33,7 +34,9 @@ def CreateSubDf(df, an_id):
     df_labels = sub_df[['true_label', 'chosen_label']]
     return df_labels
 
-df_labels = CreateSubDf(df_cifar10h, 4)
+df_labels = CreateSubDf(df_cifar10h, 3)
+labels = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog",
+            "horse","ship", "truck"]
 
 # Fonction affichant la matrice de confusion associée à un annotateur
 # elle prend en argument:
@@ -41,13 +44,26 @@ df_labels = CreateSubDf(df_cifar10h, 4)
 # y_pred tableau dans lequel sont stockés les labels choisis par l'annotateur
 # Elle retourne un graphique représentant la matrice de confusion
 
-def PlotConfusionMatrix(y_true, y_pred):
-    arr_true_labels = df_labels[[y_true]].to_numpy()
-    arr_chosen_labels = df_labels[[y_pred]].to_numpy()
-    ConfusionMatrixDisplay.from_predictions(arr_true_labels, arr_chosen_labels)
+def PlotConfusionMatrix(df, labels):
+    cm = confusion_matrix(df[['true_label']], df[['chosen_label']],
+                                  normalize='true')
+    cmap=plt.cm.get_cmap('Blues')
+    y_labels = labels
+    ticks = np.arange(len(y_labels))
+    
+    plt.figure(figsize=(10, 10))
+    plt.imshow(cm, cmap=cmap)
+    plt.title('matrice de confusion')
+    plt.colorbar()
+    plt.xticks(ticks, y_labels, rotation=45)
+    plt.yticks(ticks, y_labels)
+    plt.grid(False)
+        
+    plt.ylabel('True Label')
+    plt.xlabel('Chosen Label')
     plt.show()
 
-PlotConfusionMatrix('true_label', 'chosen_label')
+PlotConfusionMatrix(df_labels, labels)
 
 # confusions = {}
 # confusions[0] = confusion_matrix(df_labels['true_label'],
