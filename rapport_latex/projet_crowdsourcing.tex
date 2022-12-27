@@ -1,0 +1,95 @@
+\documentclass[a4paper,french,10pt]{article}
+\usepackage{homework}
+
+% change le nom de la table des matières
+\addto\captionsfrench{\renewcommand*\contentsname{Sommaire}}
+
+\lstdefinelanguage{Python}%
+{morekeywords={function,for,in,if,elseif,else,TRUE,FALSE,%
+		return, while, sum, sqrt, plot, mean, boxplot, data, model,matrix, print, from, import, as, hidden_layer_sizes, activation, solver,
+		fit, model_svm, parameters2, n_jobs, cv, n_splits, n_repeats},%
+	sensitive=true,%
+	morecomment=[l]{\#},%
+	morestring=[s]{"}{"},%
+	morestring=[s]{'}{'},%
+}[keywords,comments,strings]%
+
+\lstset{%
+	language         = Python,
+	basicstyle       = \ttfamily,
+	keywordstyle     = \bfseries\color{blue},
+	stringstyle      = \color{orange},
+	commentstyle     = \color{magenta},
+	showstringspaces = false,
+	literate={á}{{\'a}}1 {ã}{{\~a}}1 {é}{{\'e}}1,
+}
+
+\begin{document}
+	
+	% Blank out the traditional title page
+	\title{\vspace{-1in}} % no title name
+	\author{} % no author name
+	\date{} % no date listed
+	\maketitle % makes this a title page
+	
+	% Use custom title macro instead
+	\usebox{\myReportTitle}
+	\vspace{1in} % spacing below title header
+	
+	% Assignment title
+	{\centering \huge \assignmentName \par}
+	{\centering \noindent\rule{4in}{0.1pt} \par}
+	\vspace{0.05in}
+	{\centering \courseCode~: \courseName~ \par}
+	{\centering Rédigé le \pubDate\ en \LaTeX \par}
+	\vspace{1in}
+	
+	% Table of Contents
+	\tableofcontents
+	\newpage
+	
+	%----------------------------------------------------------------------------------------
+	%	EXERCICE 1
+	%----------------------------------------------------------------------------------------
+	
+	\section{Question 1}
+	
+	\underline{Présentons très synthétiquement le jeu de données pour le \textit{AND}, \textit{XOR} et \textit{OR}:}
+	
+%	\begin{figure}[htp] 
+%		\centering
+%		\subfloat[Graphique du jeu de données \textit{AND}]{%
+%			\includegraphics[scale=1.0]{images/AND.png}%
+%		}%
+%		\hfill%
+%		\subfloat[Graphique du jeu de données \textit{XOR}]{%
+%			\includegraphics[scale=1.0]{images/XOR.png}%
+%		}%
+%		\hfill%
+%		\subfloat[Graphique du jeu de données \textit{OR}]{%
+%			\includegraphics[scale=1.0]{images/OR.png}%
+%		}%
+%	\end{figure}
+	Les difficultés de classification résident dans le fait que les données du \textit{XOR} ne sont pas linéairement séparables. Sur le graphique (b) on voit qu'il y a deux droites de séparation et non une seule. De ce fait, un seul neurone ne peut réussir à classifier les données.
+	
+	\section{Question 2}
+	
+	\underline{Définissons un classifieur \textit{MLP} pour apprendre l’opérateur \textit{AND}:}
+	
+%	\lstinputlisting[language=Python, firstline=68, 
+%	lastline=69]{code/MLP.py}
+	
+%	\begin{figure}[H]
+%		\centering
+%		\includegraphics[scale=0.7]{images/Q2.png}
+%		\caption{Score obtenu par le classifieur $MLP$ sur les données de test de l'opérateur $AND$}
+%	\end{figure}
+	Dans le cas où l'on souhaite apprendre l'opérateur $AND$, le classifieur $MLP$ ne comprenant aucune couche cachée fournit de très bons résultats en terme de prédiction. Comme on peut le voir sur la figure 1, le classifieur ne fait aucune erreur de prédiction (le score vaut $1$). Pour calculer ce score nous avons utiliser la fonction $score(x\_test, y\_test)$ de $sklearn$.
+	\section{Question 3}
+	
+	
+	\section{Lien git du TP}
+	Vous pourrez accéder au code python complet (fichier intitulé $MLP.py$) que nous avons implémenté afin de répondre aux questions de ce TP via le lien git suivant:\\
+	\url{https://github.com/nicolas0344/MLP-Apprentissage.git}
+	
+\end{document}
