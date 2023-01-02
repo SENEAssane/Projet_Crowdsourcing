@@ -1,0 +1,336 @@
+\documentclass[11pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+\usetheme{Antibes}
+\usepackage{subfig}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+%%% Packages additionnels
+\usepackage{verbatim}
+\usepackage{bbm}
+\usepackage{stmaryrd}
+\usepackage[numbered,framed]{matlab-prettifier}
+\usepackage{listings}
+
+\renewcommand{\algorithmicrequire}{\textbf{Entrée(s) :}}
+\renewcommand{\algorithmicreturn}{\textbf{retourner}}
+\renewcommand{\algorithmicensure}{\textbf{Initialisation ;}}
+\renewcommand{\algorithmicwhile}{\textbf{Tant que}}
+\renewcommand{\algorithmicdo}{\textbf{Initialisation}}
+\renewcommand{\algorithmicendwhile}{\textbf{fin du Tant que ;}}
+\renewcommand{\algorithmicend}{\textbf{fin}}
+\renewcommand{\algorithmicif}{\textbf{si}}
+\renewcommand{\algorithmicendif}{\textbf{fin du si}}
+\renewcommand{\algorithmicelse}{\textbf{sinon}}
+\renewcommand{\algorithmicelsif}{\textbf{fin du sinon}}
+\renewcommand{\algorithmicthen}{\textbf{alors}}
+\renewcommand{\algorithmicthen}{\textbf{Étape E}}
+\renewcommand{\algorithmicthen}{\textbf{Étape M}}
+\renewcommand{\algorithmicfor}{\textbf{pour}}
+\renewcommand{\algorithmicforall}{\textbf{pour tout}}
+\renewcommand{\algorithmicto}{\textbf{à}}
+\renewcommand{\algorithmicendfor}{\textbf{fin du pour}}
+\renewcommand{\algorithmicdo}{\textbf{faire}}
+\renewcommand{\algorithmicloop}{\textbf{boucler}}
+\renewcommand{\algorithmicendloop}{\textbf{fin de la boucle}}
+\renewcommand{\algorithmicrepeat}{\textbf{répéter}}
+\renewcommand{\algorithmicuntil}{\textbf{jusqu’à}}
+
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\makeatother
+\setbeamertemplate{footline}
+{
+	\leavevmode%
+	\hbox{%
+		\begin{beamercolorbox}[wd=.33\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+			\usebeamerfont{author in head/foot}\insertshortauthor
+		\end{beamercolorbox}%
+		\begin{beamercolorbox}[wd=.33\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+			\usebeamerfont{title in head/foot}\insertshorttitle
+		\end{beamercolorbox}%
+		\begin{beamercolorbox}[wd=.33\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+			\usebeamerfont{date in head/foot}\insertshortdate\hspace*{3em}
+			\insertframenumber{} / \inserttotalframenumber\hspace*{1ex}
+	\end{beamercolorbox}}%
+	\vskip0pt%
+}
+\makeatletter
+\setbeamertemplate{itemize item}[ball]
+\setbeamertemplate{itemize subitem}[triangle]
+\setbeamertemplate{itemize subsubitem}[circle]
+
+
+
+\AtBeginSection[]{\begin{frame} \tableofcontents[currentsection] \end{frame}}
+
+
+\begin{document}
+	\author{CÔME, SENE}
+	\title[Projet UE HAX817X]{Crowdsourcing}
+	\subtitle{}
+	\logo{
+		\begin{minipage}[c]{1.15\linewidth}
+			\includegraphics[height=0.6cm]{logo.png} \hspace{0.65truecm}\hfill 
+			\includegraphics[height=0.6cm]{imag_logo.png}
+			\hspace{0.65truecm}\hfill 
+			\includegraphics[height=0.6cm]{fds_logo.png}
+		\end{minipage}
+	}
+	\institute[Université de Montpellier]{Soutenance d'atelier de Master 2}
+	\date{2 Janvier 2023}
+	%\subject{}
+	%\setbeamercovered{transparent}
+	\setbeamertemplate{navigation symbols}{}
+	%	\begin{frame}[plain]
+		%		\maketitle
+		%	\end{frame}
+	\frame{\titlepage}
+	%	\begin{frame}
+		%		\frametitle{}
+		%	\end{frame}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%
+	
+	
+	
+	\begin{frame}{Introduction}
+		PARALLEL LINES ASSUMPTION IN ORDINAL LOGISTIC REGRESSION AND ANALYSIS APPROACHES\vspace{3mm}
+		
+		Erkan ARI and Zeki YILDIZ, 2014
+		\begin{block}{Contexte}
+			\begin{itemize}
+				\item Etude d'un article portant sur un glm dont les données sont catégorielles ordonnées : modèle logit cumulatif.
+				\item Type de données : données catégorielles ordonnées.
+				\item Problématique : Nous avons plusieurs paramétrisations notamment celle des pentes égales.
+				\item Approche classique : modèle logit cumulatif à pentes égales.
+			\end{itemize}
+			
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}
+		\begin{block}{}
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.7]{images/data_wine.png}
+				\caption{Exemple de données catégorielles ordonnées}
+			\end{figure}
+		\end{block}
+	\end{frame}
+	
+	
+	\section{Définition}
+	\begin{frame}{Définition}
+		\begin{block}{Définition et Hypothèses}
+			Soit $Y$ à valeurs dans $\{1, 2, \dots, j, \dots ,J\}$, la variable aléatoire de réponse.
+			\begin{itemize}
+				\item Soit $\pi_j$ : $\pi_j = \mathbb{P}(Y = j)$, $\forall$ $j \in \{1, \dots ,J\}$
+				\item On définit : \[ \mathbb{P}(Y \leq j) := \pi_1 + \pi_2 + \dots + \pi_j, \forall j \in \{1, \dots ,J\}.\] 
+				
+			\end{itemize} 
+			
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Définition}
+		\scriptsize
+		\begin{block}{Le modèle}																													Ainsi le cumulatif logit est défini de la façon suivante :
+			\[\log \left(\frac{\mathbb{P}(Y \leq j)}{\mathbb{P}(Y > j)}\right) := \log \left(\frac{\pi_1 + \pi_2 + \dots + \pi_j}{\pi_{j+1} + \pi_2 + \dots + \pi_J}\right),\] $\forall j \in \{1, \dots ,J-1\}.$ \\
+			Considérons : $\forall j \in \{1, \dots ,J-1\}$
+			\[logit [\mathbb{P}(Y \leq j)] = \alpha_j + x' \beta_j,\]$\hspace{3mm}avec\hspace{3mm}
+			x =(x_1, \dots ,x_p)\hspace{3mm}et\hspace{3mm}
+			\beta=(\beta_{1j}, \dots ,\beta_{pj})$
+			
+			\[\iff \log \left(\frac{\mathbb{P}(Y \leq j)}{\mathbb{P}(Y > j)}\right) = \alpha_j + x' \beta_j\] 
+			
+			
+		\end{block}
+	\end{frame}
+	
+	\section{Le modèle des côtes proportionnelles}
+	\begin{frame}{Définition}
+		\begin{block}{Définition et Hypothèse}
+			Si $H_0 : \beta_1 = \beta_2 = \dots = \beta_{J-1} = \beta$ alors :
+			\begin{itemize}
+				\item On a le modèle logit à côtes proportionnelles (POM).
+				\item Défini par : \[\mathbb{P}(Y \leq j) := \frac{\exp(\alpha_j + x' \beta)}{1 + \exp(\alpha_j + x' \beta)}.\]
+			\end{itemize}
+			
+		\end{block}
+	\end{frame}	
+	
+	
+	\section{Réponse latente continue}
+	\begin{frame}{Interprétation}
+		\begin{block}{Interprétation}
+			Supposons le modèle linéaire suivant pour une variable latente non observée : \[{Y^*}_i := x_i' \beta^* + \epsilon_i,\]\hspace{3mm}avec\hspace{3mm}$\epsilon_i \sim\mathcal{L}(0, 1)$
+		\end{block}				
+		
+		
+		\begin{block}{}
+			\begin{align*}	
+				\mathbb{P}({Y^*}_i \le \theta_j) &= \mathbb{P}(\epsilon_i \le \theta_j - x_i' \beta^*) \\
+				&= F(\theta_j - x_i'\beta^*) = \mathbb{P}(Y_i \leq j) ,
+			\end{align*}
+			\hspace{3mm}où\hspace{3mm}$\beta^* = -\beta$	 							
+		\end{block}		
+		
+	\end{frame}
+	
+	\section{Le modèle des côtes non proportionnelles}
+	\begin{frame}{Définition}
+		\begin{block}{Définition et Hypothèse}
+			Si $\beta_j \neq \beta_{j'} \hspace{3mm}\forall j \neq j'$ alors :
+			\begin{itemize}
+				\item On a le modèle logit à côtes non proportionnelles (NPOM).
+				\item Défini par : \[\mathbb{P}(Y \leq j) := \frac{\exp(\alpha_j + x' \beta_j)}{1 + \exp(\alpha_j + x' \beta_j)}.\]
+				\item On a une pente pour chaque catégorie.
+			\end{itemize}
+			
+		\end{block}
+	\end{frame}	
+	
+	\section{Modèle de côtes proportionnelles partielles (PPOM)}
+	\begin{frame}{Modèle PPOM (Partial Proportional Odds Model)}
+		Proposé par Peterson et Harrell (1990)
+		\begin{block}{Utilisation}
+			Lorsque les hypothèses des pentes parallèles sont respectées ou non
+		\end{block}
+		\begin{block}{2 formes de PPOM}
+			\begin{itemize}
+				\item UPPOM (Unconstrained Partial Proportional Odds Model) Modèles de côtes proportionnelles sans contrainte
+				\item CPPOM (Constrained Partial Proportional Odds Model) Modèle de côtes proportionnelles avec contraintes
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Modèle UPPOM}
+		\scriptsize
+		\begin{block}{Forme générale du modèle}
+			\[
+			P(Y \leq y_j | x) = \frac{exp(- \alpha_j - x' \beta - t' \gamma_j)}{1 + exp(- \alpha_j - x' \beta - t' \gamma_j)}
+			\]
+			avec:
+			\begin{itemize}
+				\item x matrice de taille (p,1)
+				\item t matrice de taille (q,1)
+				\item $\beta$ vecteur (de taille $p$) des coefficients respectant l'hypothèse des pentes parallèles
+				\item $\gamma_j$ coefficients qui ne respectent pas l'hypothèse des pentes parallèles (avec $j \in \{1, \dots ,J-1\}$)
+			\end{itemize}
+		\end{block}
+		\textbf{\underline{Remarque:}} \\
+		\vspace{2mm}
+		Si $x = 0_{(p,1)}$ le modèle UPPOM devient le modèle NPOM \\
+		Si $t = 0_{(q,1)}$ le modèle UPPOM devient le modèle POM
+	\end{frame}
+	
+	\begin{frame}{Modèle CPPOM}
+		\scriptsize
+		\begin{block}{Forme générale du modèle}
+			\[
+			P(Y \leq y_j | x) = \frac{exp(- \alpha_j - x' \beta - t' \gamma \Gamma_j)}{1 + exp(- \alpha_j - x' \beta - t' \gamma \Gamma_j)}
+			\]
+			avec:
+			\begin{itemize}
+				\item x matrice de taille (p,1)
+				\item t matrice de taille (q,1)
+				\item $\beta$ vecteur (de taille $p$) des coefficients respectant l'hypothèse des pentes parallèles
+				\item $\gamma$ vecteur (de taille $q$) des coefficients indépendants de $j$
+				\item $\Gamma_j$ scalaire dépendant de $j$ et jouant le rôle de contrainte
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	\section{Expériences numériques}
+	\begin{frame}{Expérience numérique}
+		\begin{block}{jeu de données (Wine dataset)}
+			objectif: examiner l'effet du contact et de la température sur l'amertume perçue du vin.
+		\end{block}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.35]{images/data_wine.png}
+			\caption{Capture d'écran d'une partie du jeu de données}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}{Expériences numériques}
+		\scriptsize
+		\begin{block}{Les différents modèles POM testés}
+			\begin{itemize}
+				\item \textbf{Modèle fm1:} $logit\big( P(Y_i \leq j) \big) = \theta_j$ \\
+				\item \textbf{Modèle fm2:} $logit\big( P(Y_i \leq j) \big) = \theta_j - \beta(temp_i)$ \\
+				\item \textbf{Modèle fm3:} $logit\big( P(Y_i \leq j) \big) = \theta_j - \beta(contact_i)$ \\
+				\item \textbf{Modèle fm4:} $logit\big( P(Y_i \leq j) \big) = \theta_j - \beta_1(temp_i) - \beta_2(contact_i)$
+			\end{itemize}
+			Avec $i = \{1, \dots ,n\}$; $j = \{1, \dots ,J-1\}$
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.34]{images/modeles_pom.png}
+				\caption{Modèles POM}
+			\end{figure}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Expériences numériques}
+		\scriptsize
+		\begin{block}{Les différents modèles PPOM testés}
+			\begin{itemize}
+				\item \textbf{Modèle fm.nom1:} $logit\big( P(Y_i \leq j) \big) = \theta_j + \gamma_j(contact_i)$ \\
+				\item \textbf{Modèle fm.nom2:} $logit\big( P(Y_i \leq j) \big) = \theta_j + \gamma_j(temp_i)$ \\
+				\item \textbf{Modèle fm.nom3:}$logit\big( P(Y_i \leq j) \big) = \theta_j + \gamma_{1j}(contact_i) + \gamma_{2j}(temp_i)$ \\
+				\item \textbf{Modèle fm.nom4:}$logit\big( P(Y_i \leq j) \big) = \theta_j + \gamma_j(contact_i) - \beta(temp_i)$ \\
+				\item \textbf{Modèle fm.nom5:}$logit\big( P(Y_i \leq j) \big) = \theta_j + \gamma_j(temp_i) - \beta(contact_i)$
+			\end{itemize}
+			Avec $i = \{1, \dots ,n\}$; $j = \{1, \dots ,J-1\}$
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.31]{images/modeles_ppom.png}
+				\caption{Modèles PPOM}
+			\end{figure}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Expérience numérique}
+		\begin{block}{Anova sur les différents modèles POM}
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.33]{images/anv_pom.png}
+				\caption{AIC des différents modèles POM}
+			\end{figure}
+		\end{block}
+		\begin{block}{Anova sur les différents modèles PPOM}
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale=0.35]{images/anv_ppom.png}
+				\caption{AIC des différents modèles PPOM}
+			\end{figure}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Expériences numériques}
+		\begin{block}{Modèles les plus efficaces}
+			\begin{itemize}
+				\item \textbf{Modèle fm1 } meilleur modèle d'$AIC = 184,98$ (le plus petit) \\
+				\item \textbf{Modèle fm.nom5} deuxième meilleur modèle d'$AIC = 187,81$
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	\section{Conclusion}
+	
+	\begin{frame}{Conclusion}
+		
+		\begin{block}{Conclusion}
+			Le modèle logit cumulatif, à travers ses différentes sous-parties principales, nous permet :
+			\begin{itemize}
+				\item de comparer les catégories de variables dépendantes dans les modèles logistiques ordinaux, et
+				\item de donner par exemple des prédictions de réponses correctes à un questionnaire avec des données non observées.
+			\end{itemize}
+			
+		\end{block}
+	\end{frame}
+	
+	
+\end{document}
