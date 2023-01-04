@@ -6,17 +6,11 @@ Created on Wed Dec 21 08:46:54 2022
 """
 
 import matplotlib.pyplot as plt
+import itertools
 import pandas as pd
 import numpy as np
-import itertools
 from sklearn.metrics import confusion_matrix
-
-df_cifar10h = pd.read_csv(
-    'C:/Users/olivi/Documents/Montpellier/M2_SSD/Projet_Salmon_test/data/cifar10h-raw.csv', na_values='-99999')
-
-df_cifar10h.dropna(inplace=True)
-# df_category_label = df_cifar10h[["annotator_id","true_category","chosen_category",
-#                                  "true_label", "chosen_label"]]
+from isar.models import DawidSkeneIID
 
 
 # Cette fonction créé un nouveau dataframe qui contiendra les labels choisis 
@@ -32,21 +26,18 @@ df_cifar10h.dropna(inplace=True)
 
 def CreateSubDf(df, an_id):
     sub_df = df[(df["annotator_id"] == an_id)]
-    df_labels = sub_df[['true_label', 'chosen_label']]
+    df_labels = sub_df[['cifar10_test_test_idx', 'true_label', 'chosen_label']]
     return df_labels
 
-df_labels = CreateSubDf(df_cifar10h, 0)
-labels = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog",
-            "horse","ship", "truck"]
 
-# Affichage customisé de la matrice de confusion
+# customisation de la matrice de confusion
 # Cette fonction prend en argument:
 # cm (la matrice de confusion)
 # classes (la liste des noms de chaque classe)
 # normalize (pour normaliser la matrice ou non)
 # title (le titre de la représentation graphique de la matrice de confusion)
 # cmap (palette de couleurs pour le graphique)
-def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix',
+def custom_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix',
                           cmap=plt.cm.Blues):
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
@@ -82,20 +73,53 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
 # l'annotateur)
 # class_names (la liste des noms de chaque classe)
 # elle retourne le graphique customisé de la matrice de confusion
-def matrice_confusion(y_true, y_predict, class_names):
+def plot_confusion_matrix(y_true, y_predict, class_names):
     conf_matrix = confusion_matrix(y_true, y_predict)
     np.set_printoptions(precision=2)
     plt.figure(figsize=(15,15))
-    plot_confusion_matrix(conf_matrix, normalize=True, classes=class_names,
+    custom_confusion_matrix(conf_matrix, normalize=True, classes=class_names,
                           title='Matrice de confusion')
     plt.show()
 
-y_true = df_labels[['true_label']].to_numpy()
-y_predict = df_labels[['chosen_label']].to_numpy()
-
-matrice_confusion(y_true, y_predict, labels)
 
 # compter le nombre de fois que le label chat est correctement prédit par l'annotateur
 # df_labels[(df_labels['true_label'] == 3) & (df_labels['chosen_label'] == 9)].value_counts()
 # compter le nombre de fois que l'annoteur se trompe en ne prédisant pas le label chat
 # df_labels[(df_labels['true_label'] == 3) & (df_labels['chosen_label'] != 3)].value_counts()
+
+def plot_cm_ds(df, an_id, labels):
+    sub_df = CreateSubDf(df, an_id)
+    U_df = sub_df['chosen_label'].values.astype(float)
+    U2D_array = np.reshape(U_df, (-1, 1))
+    pi = np.random.dirichlet(np.ones(10))
+    psi = np.tile(np.eye(10)[:, np.newaxis, :]*0.93, [1, 1, 1]) + 0.01
+    dsmodel = DawidSkeneIID((10, 1), predict_tol=0.5)
+    dsmodel.fit(U2D_array, priors=(np.ones(10), np.ones([10, 1, 10])),
+    starts=[(pi, psi)])
+    cm3D_array = dsmodel.Psi
+    cm = cm3D_array.reshape(10,10)
+    plt.figure(figsize=(15,15))
+    custom_confusion_matrix(
+        cm, normalize=True, classes=labels,
+        title="Matrice de confusion estimée avec l'algo EM")
+    plt.show()
+    
+
+
+if __name__ == '__main__':
+    df_cifar10h = pd.read_csv(
+        'C:/Users/olivi/Documents/Montpellier/M2_SSD/Projet_Salmon_test/data/cifar10h-raw.csv',
+        na_values='-99999')
+
+    df_cifar10h.dropna(inplace=True)
+    
+    # df_labels = CreateSubDf(df_cifar10h, 10)
+    labels = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog",
+                "horse","ship", "truck"]
+    
+    annotator_id = 7
+    plot_cm_ds(df_cifar10h, annotator_id, labels)
+    
+    y_pred_an = CreateSubDf(df_cifar10h, annotator_id)['chosen_label'].to_numpy()
+    y_true = CreateSubDf(df_cifar10h, annotator_id)['true_label'].to_numpy()
+    plot_confusion_matrix(y_true, y_pred_an, labels)

@@ -6,8 +6,8 @@
 
 \lstdefinelanguage{Python}%
 {morekeywords={function,for,in,if,elseif,else,TRUE,FALSE,%
-		return, while, sum, sqrt, plot, mean, boxplot, data, model,matrix, print, from, import, as, hidden_layer_sizes, activation, solver,
-		fit, model_svm, parameters2, n_jobs, cv, n_splits, n_repeats},%
+		return, while, sum, range, plot, mean, for, data, model,matrix, print, from, import, as, else, False, len, plot_confusion_matrix, matrice_confusion,
+		fit, format, parameters2, True, cv, float, plot_cm_ds, CreateSubDf},%
 	sensitive=true,%
 	morecomment=[l]{\#},%
 	morestring=[s]{"}{"},%
@@ -47,30 +47,11 @@
 	% Table of Contents
 	\tableofcontents
 	\newpage
-	
-	%----------------------------------------------------------------------------------------
-	%	EXERCICE 1
-	%----------------------------------------------------------------------------------------
+
 	
 	\section{Introduction}
 	
 	Dans le cadre de la labélisation des images ou de la pose d'un diagnostique, plusieurs méthodes sont utilisées pour savoir le vrai label d’une image donnée ou déterminer la véritable pathologie d'un patient. Parmi eux nous pouvons citer l’algorithme EM (Expectation Maximisation). C’est un algorithme itératif, une méthode d’estimation paramétrique qui se base sur le maximum de vraisemblance.
-	
-%	\begin{figure}[htp] 
-%		\centering
-%		\subfloat[Graphique du jeu de données \textit{AND}]{%
-%			\includegraphics[scale=1.0]{images/AND.png}%
-%		}%
-%		\hfill%
-%		\subfloat[Graphique du jeu de données \textit{XOR}]{%
-%			\includegraphics[scale=1.0]{images/XOR.png}%
-%		}%
-%		\hfill%
-%		\subfloat[Graphique du jeu de données \textit{OR}]{%
-%			\includegraphics[scale=1.0]{images/OR.png}%
-%		}%
-%	\end{figure}
-	
 	
 	\section{Notations}
 	
@@ -83,15 +64,6 @@
 		
 	\end{itemize}
 	
-%	\lstinputlisting[language=Python, firstline=68, 
-%	lastline=69]{code/MLP.py}
-	
-%	\begin{figure}[H]
-%		\centering
-%		\includegraphics[scale=0.7]{images/Q2.png}
-%		\caption{Score obtenu par le classifieur $MLP$ sur les données de test de l'opérateur $AND$}
-%	\end{figure}
-
 	\section{Estimation de la vraisemblance}
 	\subsection{Cas 1: 1 medecin et 1 patient}
 	
@@ -127,24 +99,157 @@
 	Par indépendance des $(Y_{i}^k)$ et $(X_i)$, 
 	\begin{align*}
 		\mathbb{P} \left((\cap \cap Y_{i}^k) \cap \left(\cap(X_i=x_i)\right)  \right) &= \prod_{i=1}^{I} \mathbb{P} \left(\cap Y_{i}^k | \cap (X_i=x_i)\right) \mathbb{P}(X_i = x_i)\\
-		 &= \prod_{i=1}^{I}\left(\mathbb{P}(X_i = x_i) \prod_{k=1}^{K}\mathbb{P} \left( Y_{i}^k | \cap(X_i=x_i) \right)\right) \\
-		 &= \prod_{i=1}^{I}\left(p_{x_i} \prod_{k=1}^{K}\mathbb{P} \left( Y_{i}^k | (X_i=x_i) \right)\right)
+		&= \prod_{i=1}^{I}\left(\mathbb{P}(X_i = x_i) \prod_{k=1}^{K}\mathbb{P} \left( Y_{i}^k | \cap(X_i=x_i) \right)\right) \\
+		&= \prod_{i=1}^{I}\left(p_{x_i} \prod_{k=1}^{K}\mathbb{P} \left( Y_{i}^k | (X_i=x_i) \right)\right)
 	\end{align*}
-D'où \[\mathbb{P} \left((\cap \cap Y_{i}^k) \cap \left(\cap(X_i=x_i)\right)  \right) \propto \prod_{i=1}^{I}\prod_{l=1}^{J}\left[p_{x_i} \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{ij}^k\right)^{{n_{ij}}^{k}}\right]^{T_{ij}}.\]
-Par conséquent la vraisemblance de toutes les données est :
-\[\propto \prod_{i=1}^{I}\prod_{l=1}^{J}\left[p_{x_i} \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{ij}^k\right)^{{n_{ij}}^{k}}\right]^{T_{ij}}\]
+	D'où \[\mathbb{P} \left((\cap \cap Y_{i}^k) \cap \left(\cap(X_i=x_i)\right)  \right) \propto \prod_{i=1}^{I}\prod_{l=1}^{J}\left[p_{x_i} \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{ij}^k\right)^{{n_{ij}}^{k}}\right]^{T_{ij}}.\]
+	Par conséquent la vraisemblance de toutes les données est :
+	\[\propto \prod_{i=1}^{I}\prod_{l=1}^{J}\left[p_{x_i} \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{ij}^k\right)^{{n_{ij}}^{k}}\right]^{T_{ij}}\]
 	
 	\section{Estimation du maximum de vraisemblance}
 	Etant donné que la vraisemblance de toutes nos données est connue, nous pouvons trouver l'estimation du maximum de vraisemblance associé. Si on suppose que les $T_{ij}$ sont connus et que en pratique nous avons les ${{n_{ij}}^{k}}$ (grâce à nos données), on a les estimateurs du maximum de vraisemblance suivants :
 	
 	\[\hat{\pi}_{jl}^k = \frac{\sum_{i=1}^{I} T_{ij} {n_{il}}^{k}}{\sum_{l=1}^{J} \sum_{i=1}^{I}  T_{ij} {n_{il}}^{k}}.\]\\
 	\[\hat{p}_j = \frac{\sum_{i=1}^{I} T_{ij}}{I}.\]
+
+	
+	\section{Applications numériques}
+	
+	Dans cette section, nous allons présenter les applications numériques qui ont été réalisées dans le cadre de ce projet.
+	Cela nous permettra de voir comment les outils mathématiques théoriques, présentés dans le papier " Maximum Likelihood Estimation of Observer
+	Error-rates using the EM Algorithm" de David et Skene, peuvent s'appliquer au problème du "crowdsourcing". Mais tout d'abord donnons le contexte de ce projet.
+	Dans le cadre du service de micro-travail Turc mécanique d'amazon, lancé par la compagnie en 2005, un certain nombre de personnes ont annoté en échange d'une rémunération, différentes images issues d'une base de données nommée cifar10 (nous la décrirons dans le prochain paragraphe). Cependant, ces derniers ont potentiellement commis des erreurs d'étiquetage. Les vraies étiquettes (labels) des images sont ici connues mais ce n'est généralement pas le cas dans la vraie vie. Le but de ce projet est donc d'utiliser l'algorithme EM afin d'estimer les vrais labels associés à ces dernières.
+	Comme mentionné précédemment, les vrais labels sont ici connus. Cela nous permettra donc de vérifier la justesse des étiquettes choisies par les annotateurs ainsi que la précision des prédictions faites par l'algorithme EM. Pour ce faire, nous allons générer des matrices de confusion. Ensuite, nous montrerons que l'utilisation de l'algorithme EM est pertinent dans ce cas, et nous comparerons les matrices générées à partir des prédictions de l'algorithme EM, avec celles générées à partir des labels choisis par les annotateurs. Par ailleurs, le nom Turc mécanique a été donné en mémoire du célèbre canular de l'automate joueur d'échec. Dans ce canular, l'automate soit disant doté de la capacité de jouer aux échecs était en réalité un joueur humain caché dans le mécanisme de la machine.
 	
 	
+	\subsection{Le jeu de données}
+	La base de données que nous avons utilisé "cifar10h" est une base qui contient 10 différentes classes d'images, que nous vous présentons ci dessous:
+	\begin{itemize}
+		\item classe 0: airplane \\
+		\item classe 1: automobile \\
+		\item classe 2: bird \\
+		\item classe 3: cat \\
+		\item classe 4 deer \\
+		\item classe 5: dog \\
+		\item classe 6: frog \\
+		\item classe 7: horse \\
+		\item classe 8: ship \\
+		\item classe 9: truck
+		
+	\end{itemize}
 	
-%	\[\sum_{(n_{i1}^k, \dots, n_{iJ}^k)} \frac{\left[\sum_{j=1}^{J} n_{ij}^k\right]!}{\prod_{j=1}^{J} n_{ij}^k !} \prod_{j=1}^{J} \left(\pi_{lj}^k\right)^{{n_{ij}}^{k}} \propto \prod_{j=1}^{J} \left(\pi_{lj}^k\right)^{{n_{ij}}^{k}}\]
+	\vspace{2mm}
 	
+	Les données ont été stockées dans un fichier csv. Ce dernier comprend un certain nombre de colonnes décrivant les data mais nous ne nous intéresserons qu'à celles essentielles à notre étude, qui sont les suivantes:
+	\begin{itemize}
+		\item "annotator\_id" colonne composée d'entiers allant de 0 à 2570. Ces chiffres jouant le rôle d'identifiant pour les annotateurs (il y a 2571 annotateurs). \\
+		\item "true\_label" cette colonne est composée d'entiers allant de 0 à 9. Ces chiffres jouent le rôle des vraies étiquettes (labels) des images. \\
+		\item "chosen\_label" cette colonne est composée d'entiers allant de 0 à 9. Ces chiffres correspondent aux étiquettes (labels) choisies par les annotateurs (qui ne sont pas toujours corrects).
+	\end{itemize}
+
+	\vspace{2mm}
+	Dans les sections suivantes, nous allons décrire les fonctions les plus importantes que nous avons implémentées pour répondre à la problématique de ce projet.
 	
+	\subsection{Extraction des données utiles}
+	\subsubsection{La fonction $CreateSubDf$}
+	Cette fonction créé un nouveau dataframe à partir de celui d'origine. Ce sous dataframe contiendra les labels choisis par un annotateur spécifique (choisi en argument) ainsi que les vrais labels associés aux images.
 	
+	\lstinputlisting[language=Python, firstline=27, lastline=30]{code/crowdsourcing_Project.py}
+	
+	\underline{\textit{La fonction CreateSubDf prend en argument les paramètres suivants:}} \\
+	\begin{itemize}
+		\item df: le dataframe des données (Il s'agit du dataframe d'origine) \\
+		\item an\_id:  entier désignant l'identifiant de l'annotateur (an\_id sera compris entre 0 et 2571 dans notre cas)
+	\end{itemize}
+
+	\vspace{2mm}
+
+	Cette fonction renvoie un dataframe composé de deux colonnes. Dans la première seront stockés les labels choisis par un annotateur spécifique (choisi en argument). Dans la colonne deuxième colonne seront stockés les vrais labels associés aux images.
+	
+	\subsection{Customisation et affichage des matrices de confusion}
+	
+	\subsubsection{La fonction $custom\_confusion\_matrix$}
+	Cette fonction permet d'améliorer l'esthétique de la représentation graphique de la matrice de confusion afin d'avoir une visualisation agréable et claire de cette dernière. 
+	
+	\lstinputlisting[language=Python, firstline=40, lastline=66]{code/crowdsourcing_Project.py}
+	
+	\textit{\underline{La fonction custom\_confusion\_matrix prend en argument les paramètres suivants:}}
+	\vspace{2mm}
+	\begin{itemize}
+		\item cm: la matrice de confusion \\
+		\item classes: la liste stockant les noms de chaque classe \\
+		\item normalize(Booléen): si True la matrice sera normalisée, et si False elle ne le sera pas \\
+		\item title: le titre du graphique \\
+		\item cmap: la palette de couleur du graphique
+	\end{itemize}
+
+	\subsubsection{La fonction $plot\_confusion\_matrix$}
+	
+	Cette fonction va calculer la matrice de confusion puis afficher la représentation de cette dernière.
+	
+	\lstinputlisting[language=Python, firstline=76, lastline=82]{code/crowdsourcing_Project.py}
+	
+	\textit{\underline{La fonction plot\_confusion\_matrix prend en argument les paramètres suivants:}}
+		\vspace{2mm}
+		\begin{itemize}
+		\item y\_true: un numpy array dans lequel sont stockés les vrais labels \\
+		\item y\_predict: un numpy array dans lequel sont stockés les labels choisis par l'annotateur \\
+		\item class\_names: la liste stockant les noms de chaque classe
+	\end{itemize}
+
+	\vspace{2mm}
+
+	Cette fonction retourne le graphique de la matrice de confusion ("customisé" grâce à la fonction "$custom\_confusion\_matrix$" décrite dans la sous section précédente). \\
+	Dans la partie suivante, nous allons expliquer comment nous procédons pour utiliser le modèle de David et Skene (inventeur de l'algorithme EM) afin d'estimer les matrices de confusion.
+	
+	\subsection{Le modèle de David Skene}
+	L'implémentation du modèle de David-Skene que nous avons utilisé a été réalisée par Monsieur Michael P. J. Camilleri et est intégré dans son package $isar.models$. Après de nombreuses tentatives (installation dans un environnement python 3.9, puis 3.8, puis 3.7 et enfin 3.6), nous n'avons pas réussi à installer le package en utilisant la commande "python setup.py install" dans le prompt anaconda. Nous avons donc opté pour une autre solution moins conventionnel consistant à copier le dossier ISAR-Inter\_Schema\_AdapteR du chercheur dans notre git. Ce dossier contient les scripts nécessaires à l'utilisation du package $isar.models$ et nous l'avons copié afin de pouvoir réutiliser ses fonctions dont les plus importantes: $DawidSkeneIID$ et $fit$. Nous avons gardé les metadata de monsieur Michael P. J. Camilleri au début de son code python pour montrer qu'il s'agit bien de son implémentation. \\
+	Dans la sous section suivante nous allons décrire brièvement les fonctions $DawidSkeneIID$ et $fit$.
+	
+	\subsubsection{La fonction $DawidSkeneIID$}
+	Cette fonction permet d'initialiser le modèle de David Skene. \\
+	Elle prend en paramètres de nombreux arguments mais nous décrirons uniquement ceux que nous avons utilisés.
+	\vspace{2mm}
+	\textit{\underline{La fonction $DawidSkeneIID$ prend en paramètres les arguments suivants:}}
+	\vspace{2mm}
+	\begin{itemize}
+		\item dims: un couple sous la forme (nombre de classes, nombre d'annotateurs) qui indique les dimensions du modèle \\
+		\item max\_iter: Le nombre d'iterations souhaité de l'algorithme EM \\
+		\item predict\_tol: un seuil de tolérance pour la prédiction. Si inférieur à ce seuil, la fonction retournera une valeur $np.NAN$. Le seuil par défaut est $0$
+	\end{itemize}
+
+	\subsubsection{La fonction $fit$}
+	Cette fonction permet d'alimenter le modèle $DawidSkeneIID$. \\
+	Elle prend en paramètres de nombreux arguments mais nous décrirons uniquement ceux que nous avons utilisés. \\
+	\textit{\underline{La fonction $fit$ prend en paramètres les arguments suivants:}}
+	\vspace{2mm}
+	\begin{itemize}
+		\item U: les données (dans notre cas le dataframe contenant uniquement les labels choisis par les annotateurs). U est de dimension (N,K) ou N est le nombre de lignes du dataframe et K le nombre d'annotateurs choisis \\
+		\item priors: les probabilités du prior pour $\pi_z$ et $\psi_{u,z}^k = p\big(u_k = u | Z = z\big)$ en reprenant les notations de l'article de monsieur Michael P. J. Camilleri \\
+		\item starts: un tuple contenant les matrices ($\pi$ et $\psi$) des paramètres initiaux de l'algorithme EM
+	\end{itemize}
+
+	\subsubsection{La fonction $plot\_cm\_ds$}
+	Cette fonction affiche la représentation graphique de la matrice de confusion estimée à partir des labels prédits par l'algorithme EM.
+	
+	\lstinputlisting[language=Python, firstline=90, lastline=100]{code/crowdsourcing_Project.py}
+	
+	\underline{\textit{La fonction plot\_cm\_ds prend en argument les paramètres suivants:}}
+	\vspace{2mm}
+	\begin{itemize}
+		\item df: le dataframe des données \\
+		\item an\_id: entier désignant l'identifiant de l'annotateur (an\_id sera compris entre 0 et 2571 dans notre cas) \\
+		\item labels: la liste dans laquelle sont stockés les noms des labels des images
+	\end{itemize}
+	\vspace{2mm}
+	Elle retourne le graphique de la matrice de confusion estimée.
+	
+	\section{Conclusion}
+	En résumé de ce projet, nous avons pu voir que l'algorithme EM prédit les labels des images de manière assez précise. En revanche, les matrices de confusion estimées à partir de cet algorithme ne sont pas forcément meilleure que celles des annotateurs. 
+	Cependant, même si les matrices de confusion des annotateurs ne montre pas beaucoup d'erreurs (elles sont presque diagonales), elles restent tout de même généralement très proche de celles estimées à partir de l'algorithme EM.
+	
+	\section{Lien git du TP}
+	Vous pourrez accéder au code python complet (fichier intitulé $code_crowdsourcing.py$) que nous avons implémenté afin de réaliser les expériences numériques via le lien git suivant:\\
+	\url{https://github.com/SENEAssane/Projet_Crowdsourcing.git}
 	
 \end{document}
