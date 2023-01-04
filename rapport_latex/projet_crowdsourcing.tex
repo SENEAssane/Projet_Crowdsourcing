@@ -1,0 +1,150 @@
+\documentclass[a4paper,french,10pt]{article}
+\usepackage{homework}
+
+% change le nom de la table des matières
+\addto\captionsfrench{\renewcommand*\contentsname{Sommaire}}
+
+\lstdefinelanguage{Python}%
+{morekeywords={function,for,in,if,elseif,else,TRUE,FALSE,%
+		return, while, sum, sqrt, plot, mean, boxplot, data, model,matrix, print, from, import, as, hidden_layer_sizes, activation, solver,
+		fit, model_svm, parameters2, n_jobs, cv, n_splits, n_repeats},%
+	sensitive=true,%
+	morecomment=[l]{\#},%
+	morestring=[s]{"}{"},%
+	morestring=[s]{'}{'},%
+}[keywords,comments,strings]%
+
+\lstset{%
+	language         = Python,
+	basicstyle       = \ttfamily,
+	keywordstyle     = \bfseries\color{blue},
+	stringstyle      = \color{orange},
+	commentstyle     = \color{magenta},
+	showstringspaces = false,
+	literate={á}{{\'a}}1 {ã}{{\~a}}1 {é}{{\'e}}1,
+}
+
+\begin{document}
+	
+	% Blank out the traditional title page
+	\title{\vspace{-1in}} % no title name
+	\author{} % no author name
+	\date{} % no date listed
+	\maketitle % makes this a title page
+	
+	% Use custom title macro instead
+	\usebox{\myReportTitle}
+	\vspace{1in} % spacing below title header
+	
+	% Assignment title
+	{\centering \huge \assignmentName \par}
+	{\centering \noindent\rule{4in}{0.1pt} \par}
+	\vspace{0.05in}
+	{\centering \courseCode~: \courseName~ \par}
+	{\centering Rédigé le \pubDate\ en \LaTeX \par}
+	\vspace{1in}
+	
+	% Table of Contents
+	\tableofcontents
+	\newpage
+	
+	%----------------------------------------------------------------------------------------
+	%	EXERCICE 1
+	%----------------------------------------------------------------------------------------
+	
+	\section{Introduction}
+	
+	Dans le cadre de la labélisation des images ou de la pose d'un diagnostique, plusieurs méthodes sont utilisées pour savoir le vrai label d’une image donnée ou déterminer la véritable pathologie d'un patient. Parmi eux nous pouvons citer l’algorithme EM (Expectation Maximisation). C’est un algorithme itératif, une méthode d’estimation paramétrique qui se base sur le maximum de vraisemblance.
+	
+%	\begin{figure}[htp] 
+%		\centering
+%		\subfloat[Graphique du jeu de données \textit{AND}]{%
+%			\includegraphics[scale=1.0]{images/AND.png}%
+%		}%
+%		\hfill%
+%		\subfloat[Graphique du jeu de données \textit{XOR}]{%
+%			\includegraphics[scale=1.0]{images/XOR.png}%
+%		}%
+%		\hfill%
+%		\subfloat[Graphique du jeu de données \textit{OR}]{%
+%			\includegraphics[scale=1.0]{images/OR.png}%
+%		}%
+%	\end{figure}
+	
+	
+	\section{Notations}
+	
+	On note $\forall i \in \{1, 2, \dots,I\}$, $\forall j, l \in \{1, 2, \dots,J\}$, $\forall k \in \{1, 2, \dots,K\}$ : \\
+	
+	\begin{itemize}
+		\item $\pi_{lj}^k$ : la probabilité que le medecin k donne la réponse j sachant que la vrai réponse est l.
+		\item $T_{ij}$ : une variable de réponse associé au patient i définie par $T_{iq} = 1$  si q est la vrai réponse et $T_{iq} = 0$ si $j \neq q$.
+		\item $p_j$ : la prévalence de la classe j ou la fréquence empirique.
+		
+	\end{itemize}
+	
+%	\lstinputlisting[language=Python, firstline=68, 
+%	lastline=69]{code/MLP.py}
+	
+%	\begin{figure}[H]
+%		\centering
+%		\includegraphics[scale=0.7]{images/Q2.png}
+%		\caption{Score obtenu par le classifieur $MLP$ sur les données de test de l'opérateur $AND$}
+%	\end{figure}
+
+	\section{Estimation de la vraisemblance}
+	\subsection{Cas 1: 1 medecin et 1 patient}
+	
+	Soit $X$ à valeur dans $\{1, 2, \dots ,M\}$, une variable aléatoire indiquant la maladie du patient.
+	
+	Soit $Y$ à valeur dans $\{1, 2, \dots ,J\}$, une variable aléatoire correspondant à la maladie du patient indiquée par le medecin.
+	
+	A la suite de n épreuves identiques c'est-à-dire le patient (sachant qu'il est malade) voit plusieurs fois le medecin pour se faire diagnostiquer, on a :
+	\[Y | X=x \sim Multinomiale \left[(\pi_{xl}^Y)_{l}, n\right], avec\hspace{2mm}l \in \{1, 2, \dots,J\} .\]
+	Sa fonction de masse est donnée par : \[\mathbb{P}\left(n_{i1}^k, \dots, n_{iJ}^k\right) = \frac{\left[\sum_{j=1}^{J} n_{ij}^k\right]!}{\prod_{j=1}^{J} n_{ij}^k !} \prod_{j=1}^{J} \left(\pi_{lj}^k\right)^{{n_{ij}}^{k}} \propto \prod_{j=1}^{J} \left(\pi_{lj}^k\right)^{{n_{ij}}^{k}}.\]
+	Ainsi la vraisemblance est : \[\propto \prod_{j=1}^{J} \left(\pi_{lj}^k\right)^{{n_{ij}}^{k}}\]
+	
+	\subsection{Cas 2: K medecins et I patients}
+	
+	Soit $X$ = $(X_1, \dots, X_I)$ le vecteur aléatoire indiquant la maladie des I patients.\\
+	Soit $Y$ = $(Y_1, \dots, Y_K)$ le vecteur aléatoire indiquant la maladie des K patients.\\
+	On suppose J le nombre maximum de réponses possibles. Si le medecin répond une fois à la question du patient, on a : 	\[Y_{i}^k | X_i=x_i \sim Multinomiale \left[(\pi_{x_ij}^k), 1\right], avec\hspace{2mm}j \in \{1, 2, \dots,J\}\hspace{2mm} et\hspace{2mm} i \in \{1, 2, \dots,I\} .\]
+	
+	
+	Sa fonction de masse est donnée par :
+	
+	\[\mathbb{P}\left(n_{i1}^k, \dots, n_{iJ}^k\right) = \frac{\left[\sum_{j=1}^{J} n_{ij}^k\right]!}{\prod_{j=1}^{J} n_{ij}^k !} \prod_{j=1}^{J} \left(\pi_{x_ij}^k\right)^{{n_{ij}}^{k}} .\]
+	Etant donné que les $(Y_{i}^k)$ sont indépendants $ \forall\hspace{2mm}k \in \{1, 2, \dots,K\}\hspace{2mm} et\hspace{2mm} i \in \{1, 2, \dots,I\}$, Donc : \[\mathbb{P}\left(n_{i1}^k, \dots, n_{iJ}^k\right) = \frac{\left[\sum_{j=1}^{J} n_{ij}^k\right]!}{\prod_{j=1}^{J} n_{ij}^k !} \prod_{j=1}^{J} \left(\pi_{x_ij}^k\right)^{{n_{ij}}^{k}} \propto \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{x_ij}^k\right)^{{n_{ij}}^{k}}.\]
+	
+	Par conséquent la vraisemblance est : \[\propto \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{x_ij}^k\right)^{{n_{ij}}^{k}}\]
+	Soit $p_j = \mathbb{P}(X_i = j) \hspace{2mm}\forall\hspace{2mm}i \in \{1, 2, \dots,I\}\hspace{2mm} et\hspace{2mm} j \in \{1, 2, \dots,J\}$.
+	\[\mathbb{P} (\cap Y_{i}^k | X_i=x_i ) = \frac{\mathbb{P} \left((\cap Y_{i}^k) | \cap(X_i=x_i) \right)}{\mathbb{P}(X_i = x_i)}\] $\implies$ \[\mathbb{P} \left((\cap Y_{i}^k) | \cap(X_i=x_i) \right) = \mathbb{P} (\cap Y_{i}^k | X_i=x_i ) \mathbb{P}(X_i = x_i)\]\\
+	Donc \[\mathbb{P} \left((\cap Y_{i}^k) | \cap(X_i=x_i) \right) = p_{x_{i}} \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{x_ij}^k\right)^{{n_{ij}}^{k}}\]
+	D'une manière générale si $T_{ij}$ est une variable de réponse associé au patient i définie par $T_{iq} = 1$  si q est la vrai réponse et $T_{iq} = 0$ si $j \neq q$, on a :
+	\[\mathbb{P} \left((\cap Y_{i}^k) | \cap(X_i=x_i) \right) = \prod_{i=1}^{I}\left[p_{x_i} \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{ij}^k\right)^{{n_{ij}}^{k}}\right]^{T_{ij}}\]
+	Si on se base sur toutes les données c'est-à-dire les réponses de tous les medecins et les questions de tous les patients, on a :
+	\[\mathbb{P} \left((\cap \cap Y_{i}^k) | \cap(X_i=x_i) \right) \mathbb{P}\left(\cap (X_i = x_i)\right) = \mathbb{P} \left((\cap \cap Y_{i}^k) \cap \left(\cap(X_i=x_i)\right)  \right).\]
+	Par indépendance des $(Y_{i}^k)$ et $(X_i)$, 
+	\begin{align*}
+		\mathbb{P} \left((\cap \cap Y_{i}^k) \cap \left(\cap(X_i=x_i)\right)  \right) &= \prod_{i=1}^{I} \mathbb{P} \left(\cap Y_{i}^k | \cap (X_i=x_i)\right) \mathbb{P}(X_i = x_i)\\
+		 &= \prod_{i=1}^{I}\left(\mathbb{P}(X_i = x_i) \prod_{k=1}^{K}\mathbb{P} \left( Y_{i}^k | \cap(X_i=x_i) \right)\right) \\
+		 &= \prod_{i=1}^{I}\left(p_{x_i} \prod_{k=1}^{K}\mathbb{P} \left( Y_{i}^k | (X_i=x_i) \right)\right)
+	\end{align*}
+D'où \[\mathbb{P} \left((\cap \cap Y_{i}^k) \cap \left(\cap(X_i=x_i)\right)  \right) \propto \prod_{i=1}^{I}\prod_{l=1}^{J}\left[p_{x_i} \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{ij}^k\right)^{{n_{ij}}^{k}}\right]^{T_{ij}}.\]
+Par conséquent la vraisemblance de toutes les données est :
+\[\propto \prod_{i=1}^{I}\prod_{l=1}^{J}\left[p_{x_i} \prod_{k=1}^{K} \prod_{j=1}^{J} \left(\pi_{ij}^k\right)^{{n_{ij}}^{k}}\right]^{T_{ij}}\]
+	
+	\section{Estimation du maximum de vraisemblance}
+	Etant donné que la vraisemblance de toutes nos données est connue, nous pouvons trouver l'estimation du maximum de vraisemblance associé. Si on suppose que les $T_{ij}$ sont connus et que en pratique nous avons les ${{n_{ij}}^{k}}$ (grâce à nos données), on a les estimateurs du maximum de vraisemblance suivants :
+	
+	\[\hat{\pi}_{jl}^k = \frac{\sum_{i=1}^{I} T_{ij} {n_{il}}^{k}}{\sum_{l=1}^{J} \sum_{i=1}^{I}  T_{ij} {n_{il}}^{k}}.\]\\
+	\[\hat{p}_j = \frac{\sum_{i=1}^{I} T_{ij}}{I}.\]
+	
+	
+	
+%	\[\sum_{(n_{i1}^k, \dots, n_{iJ}^k)} \frac{\left[\sum_{j=1}^{J} n_{ij}^k\right]!}{\prod_{j=1}^{J} n_{ij}^k !} \prod_{j=1}^{J} \left(\pi_{lj}^k\right)^{{n_{ij}}^{k}} \propto \prod_{j=1}^{J} \left(\pi_{lj}^k\right)^{{n_{ij}}^{k}}\]
+	
+	
+	
+	
+\end{document}
